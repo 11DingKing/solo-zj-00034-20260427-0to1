@@ -1,0 +1,40 @@
+<!-- 导航栏 -->
+<nav class="navbar">
+  <div class="container flex-between">
+    <div class="logo" routerLink="/">🏥 医院预约挂号系统</div>
+    <div class="nav-links" *ngIf="currentUser">
+      <ng-container *ngIf="isPatient()">
+        <a routerLink="/patient/departments">科室医生</a>
+        <a routerLink="/patient/appointments">我的预约</a>
+        <a routerLink="/patient/symptom">智能导诊</a>
+      </ng-container>
+      <ng-container *ngIf="isDoctor()">
+        <a routerLink="/doctor/appointments">预约列表</a>
+      </ng-container>
+      <ng-container *ngIf="isAdmin()">
+        <a routerLink="/admin/dashboard">Dashboard</a>
+        <a routerLink="/admin/departments">科室管理</a>
+        <a routerLink="/admin/doctors">医生管理</a>
+        <a routerLink="/admin/schedules">排班管理</a>
+      </ng-container>
+      <span class="user-info">欢迎, {{ currentUser.realName }}</span>
+      <button class="btn btn-default" (click)="logout()">退出</button>
+    </div>
+    <div class="nav-links" *ngIf="!currentUser">
+      <a routerLink="/login">登录</a>
+      <a routerLink="/register">注册</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 主内容区域 -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="container text-center">
+    <p>&copy; 2024 医院门诊预约挂号系统 - 版权所有</p>
+  </div>
+</footer>

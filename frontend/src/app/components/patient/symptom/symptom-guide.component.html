@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="page-header text-center">
+    <h2>🤖 智能导诊</h2>
+    <p>输入症状，为您推荐合适的科室</p>
+  </div>
+
+  <div class="guide-card card">
+    <form [formGroup]="symptomForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="symptoms">请描述您的症状</label>
+        <textarea
+          id="symptoms"
+          formControlName="symptoms"
+          class="form-control symptom-input"
+          rows="4"
+          placeholder="例如：头痛、发烧、咳嗽、腹痛、皮肤瘙痒等"
+        ></textarea>
+        <div
+          *ngIf="
+            symptomForm.get('symptoms')?.invalid &&
+            symptomForm.get('symptoms')?.touched
+          "
+          class="error-text"
+        >
+          请输入症状描述
+        </div>
+      </div>
+
+      <div class="quick-symptoms">
+        <span class="quick-label">常见症状:</span>
+        <button
+          type="button"
+          class="btn btn-default btn-sm"
+          *ngFor="let s of quickSymptoms"
+          (click)="quickSelect(s)"
+        >
+          {{ s }}
+        </button>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100 btn-lg"
+        [disabled]="symptomForm.invalid || loading"
+      >
+        {{ loading ? "分析中..." : "开始导诊" }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="searched && !loading">
+    <div
+      class="results-header text-center"
+      *ngIf="recommendedDepartments.length > 0"
+    >
+      <h3>推荐科室</h3>
+      <p>根据您的症状，推荐以下科室</p>
+    </div>
+
+    <div
+      *ngIf="recommendedDepartments.length === 0"
+      class="card text-center empty-state"
+    >
+      <div class="empty-icon">🔍</div>
+      <h3>未找到匹配科室</h3>
+      <p>请尝试使用其他关键词描述症状</p>
+    </div>
+
+    <div *ngIf="recommendedDepartments.length > 0" class="results-grid">
+      <div
+        class="result-card card"
+        *ngFor="let dept of recommendedDepartments"
+        (click)="selectDepartment(dept)"
+      >
+        <div class="dept-icon">{{ getDeptIcon(dept.name) }}</div>
+        <h4 class="dept-name">{{ dept.name }}</h4>
+        <p class="dept-desc">
+          {{ dept.description || "查看该科室医生进行预约" }}
+        </p>
+        <div class="dept-floor">
+          <span class="badge badge-info">{{ dept.floorLocation }}</span>
+        </div>
+        <button class="btn btn-primary btn-sm mt-10">查看医生 →</button>
+      </div>
+    </div>
+  </div>
+</div>

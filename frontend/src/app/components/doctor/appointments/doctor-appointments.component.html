@@ -1,0 +1,118 @@
+<div class="container">
+  <div class="page-header">
+    <h2>📋 预约管理</h2>
+    <p>查看和管理您的预约患者</p>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+  <div *ngIf="!loading">
+    <!-- 今日预约 -->
+    <div class="section">
+      <h3>📅 今日预约</h3>
+
+      <div
+        *ngIf="todayAppointments.length === 0"
+        class="card text-center empty-state"
+      >
+        <div class="empty-icon">📭</div>
+        <h3>今日暂无预约</h3>
+        <p>您今天没有预约患者</p>
+      </div>
+
+      <div *ngIf="todayAppointments.length > 0" class="appointments-table card">
+        <table>
+          <thead>
+            <tr>
+              <th>排队号</th>
+              <th>患者姓名</th>
+              <th>电话</th>
+              <th>时段</th>
+              <th>症状</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let appt of todayAppointments">
+              <td class="queue-number">#{{ appt.queueNumber }}</td>
+              <td>{{ appt.patientName }}</td>
+              <td>{{ appt.patientPhone || "-" }}</td>
+              <td>{{ getTimeSlotDisplay(appt.timeSlot) }}</td>
+              <td class="symptoms-cell">{{ appt.symptoms || "-" }}</td>
+              <td>
+                <span class="badge {{ getStatusBadgeClass(appt.status) }}">
+                  {{ getStatusText(appt.status) }}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons" *ngIf="appt.status === 'PENDING'">
+                  <button
+                    class="btn btn-success btn-sm"
+                    (click)="markAsVisited(appt)"
+                  >
+                    已就诊
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    (click)="markAsNoShow(appt)"
+                  >
+                    爽约
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 未来预约 -->
+    <div class="section mt-30">
+      <h3>🔮 即将到来的预约</h3>
+
+      <div
+        *ngIf="upcomingAppointments.length === 0"
+        class="card text-center empty-state"
+      >
+        <div class="empty-icon">📅</div>
+        <h3>暂无即将到来的预约</h3>
+        <p>您近期没有其他预约</p>
+      </div>
+
+      <div *ngIf="upcomingAppointments.length > 0" class="appointments-list">
+        <div
+          class="appointment-card card"
+          *ngFor="let appt of upcomingAppointments"
+        >
+          <div class="appointment-header flex-between">
+            <div class="appointment-date">
+              <strong>{{
+                appt.appointmentDate | date: "yyyy年MM月dd日"
+              }}</strong>
+              <span class="time-slot">{{
+                getTimeSlotDisplay(appt.timeSlot)
+              }}</span>
+            </div>
+            <span class="badge {{ getStatusBadgeClass(appt.status) }}">
+              {{ getStatusText(appt.status) }}
+            </span>
+          </div>
+          <div class="appointment-body">
+            <div class="patient-info">
+              <span class="queue-number">#{{ appt.queueNumber }}</span>
+              <span class="patient-name">{{ appt.patientName }}</span>
+              <span class="patient-phone">{{ appt.patientPhone || "-" }}</span>
+            </div>
+            <div class="symptoms" *ngIf="appt.symptoms">
+              症状: {{ appt.symptoms }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

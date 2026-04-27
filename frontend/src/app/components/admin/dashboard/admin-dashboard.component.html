@@ -1,0 +1,118 @@
+<div class="container">
+  <div class="page-header">
+    <h2>📊 管理控制台</h2>
+    <p>医院预约数据概览</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+  <div *ngIf="!loading">
+    <!-- 统计卡片 -->
+    <div class="stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon today">📅</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats?.todayAppointments || 0 }}</div>
+          <div class="stat-label">今日预约数</div>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon monthly">📈</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats?.last30DaysAppointments || 0 }}</div>
+          <div class="stat-label">近30天预约</div>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon noshow">⚠️</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats?.noShowRate || 0 }}%</div>
+          <div class="stat-label">爽约率</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 号源日历视图 -->
+    <div class="section card mt-30">
+      <h3 class="section-title">📆 号源日历视图</h3>
+      <p class="section-subtitle">
+        本周各科室号源使用情况（颜色越深表示号源越紧张）
+      </p>
+
+      <div
+        *ngIf="calendarView?.rows?.length > 0"
+        class="calendar-table-container"
+      >
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th class="dept-header">科室</th>
+              <th *ngFor="let day of calendarView.rows[0]?.days">
+                {{ day.weekDay }}<br /><small>{{ day.date | slice: 5 }}</small>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of calendarView.rows">
+              <td class="dept-cell">
+                <strong>{{ row.department }}</strong>
+              </td>
+              <td
+                *ngFor="let day of row.days"
+                class="calendar-cell {{ getIntensityClass(day.intensity) }}"
+                title="{{ day.booked }}/{{ day.total }} ({{
+                  formatRate(day.rate)
+                }})"
+              >
+                <div class="cell-booked">{{ day.booked }}</div>
+                <div class="cell-total">/{{ day.total }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="legend">
+          <span class="legend-item">
+            <span class="legend-color intensity-high"></span> 紧张 (≥80%)
+          </span>
+          <span class="legend-item">
+            <span class="legend-color intensity-medium"></span> 适中 (50%-80%)
+          </span>
+          <span class="legend-item">
+            <span class="legend-color intensity-low"></span> 充足 (<50%)
+          </span>
+          <span class="legend-item">
+            <span class="legend-color intensity-none"></span> 无号源
+          </span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="!calendarView?.rows?.length"
+        class="text-center"
+        style="padding: 40px; color: #999"
+      >
+        暂无号源数据
+      </div>
+    </div>
+
+    <!-- 快捷操作 -->
+    <div class="quick-actions mt-30">
+      <h3 class="section-title">⚡ 快捷操作</h3>
+      <div class="actions-grid">
+        <a routerLink="/admin/departments" class="action-card card">
+          <div class="action-icon">🏥</div>
+          <div class="action-text">科室管理</div>
+        </a>
+        <a routerLink="/admin/doctors" class="action-card card">
+          <div class="action-icon">👨‍⚕️</div>
+          <div class="action-text">医生管理</div>
+        </a>
+        <a routerLink="/admin/schedules" class="action-card card">
+          <div class="action-icon">📅</div>
+          <div class="action-text">排班管理</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

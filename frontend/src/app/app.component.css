@@ -1,0 +1,79 @@
+.navbar {
+  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  padding: 0 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .container {
+  min-height: 60px;
+}
+
+.logo {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.nav-links a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-links a.router-link-active {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  color: white;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+.main-content {
+  min-height: calc(100vh - 140px);
+  padding: 20px 0;
+}
+
+.footer {
+  background: #f0f0f0;
+  padding: 20px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .navbar .container {
+    flex-direction: column;
+    padding: 10px 0;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .user-info {
+    margin: 10px 0;
+  }
+}

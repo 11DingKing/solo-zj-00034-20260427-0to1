@@ -1,0 +1,88 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="container">
+      <h1 class="hero-title">🏥 医院门诊预约挂号系统</h1>
+      <p class="hero-subtitle">便捷预约，智慧就医，让看病更简单</p>
+      <div class="hero-actions">
+        <ng-container *ngIf="!isAuthenticated()">
+          <a routerLink="/register" class="btn btn-primary btn-lg">立即注册</a>
+          <a routerLink="/login" class="btn btn-default btn-lg">用户登录</a>
+        </ng-container>
+        <ng-container *ngIf="isPatient()">
+          <a routerLink="/patient/departments" class="btn btn-primary btn-lg"
+            >开始预约</a
+          >
+          <a routerLink="/patient/symptom" class="btn btn-default btn-lg"
+            >智能导诊</a
+          >
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Departments Section -->
+  <div class="container">
+    <div class="section-header">
+      <h2>🏥 科室导航</h2>
+      <p>选择科室，查看医生排班信息</p>
+    </div>
+
+    <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+    <div *ngIf="!loading && departments.length === 0" class="alert alert-info">
+      暂无科室信息
+    </div>
+
+    <div *ngIf="!loading && departments.length > 0" class="department-grid">
+      <div
+        class="department-card card"
+        *ngFor="let dept of departments"
+        [routerLink]="
+          isPatient() ? ['/patient/departments', dept.id] : ['/login']
+        "
+        [class.clickable]="isPatient()"
+      >
+        <div class="dept-icon">{{ getDeptIcon(dept.name) }}</div>
+        <h3 class="dept-name">{{ dept.name }}</h3>
+        <p class="dept-desc">{{ dept.description || "暂无描述" }}</p>
+        <div class="dept-floor">
+          <span class="badge badge-info">{{ dept.floorLocation }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>✨ 系统特色</h2>
+        <p>为您提供便捷的医疗服务</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card card">
+          <div class="feature-icon">📅</div>
+          <h3>在线预约</h3>
+          <p>随时随地预约挂号，查看医生排班，选择合适的就诊时间</p>
+        </div>
+        <div class="feature-card card">
+          <div class="feature-icon">🔒</div>
+          <h3>安全可靠</h3>
+          <p>采用Redis分布式锁，确保号源不超卖，预约更放心</p>
+        </div>
+        <div class="feature-card card">
+          <div class="feature-icon">🤖</div>
+          <h3>智能导诊</h3>
+          <p>输入症状，智能推荐对应科室，让就医更精准</p>
+        </div>
+        <div class="feature-card card">
+          <div class="feature-icon">📊</div>
+          <h3>数据统计</h3>
+          <p>管理员视角，全面掌握医院预约情况和医生工作量</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,198 @@
+<div class="container">
+  <div class="page-header">
+    <h2>🏥 科室与医生</h2>
+    <p>选择科室，查看医生排班信息进行预约</p>
+  </div>
+
+  <div class="main-content">
+    <!-- 科室列表 -->
+    <div class="departments-panel card">
+      <h3>科室列表</h3>
+      <div class="dept-list">
+        <div
+          class="dept-item"
+          *ngFor="let dept of departments"
+          [class.active]="selectedDepartment?.id === dept.id"
+          (click)="selectDepartment(dept)"
+        >
+          <span class="dept-name">{{ dept.name }}</span>
+          <span class="dept-floor">{{ dept.floorLocation }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 医生列表 -->
+    <div class="doctors-panel card" *ngIf="selectedDepartment">
+      <h3>{{ selectedDepartment.name }} - 医生列表</h3>
+
+      <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+      <div *ngIf="!loading && doctors.length === 0" class="alert alert-info">
+        该科室暂无医生信息
+      </div>
+
+      <div *ngIf="!loading && doctors.length > 0" class="doctor-list">
+        <div
+          class="doctor-card"
+          *ngFor="let doctor of doctors"
+          [class.selected]="selectedDoctor?.id === doctor.id"
+          (click)="selectDoctor(doctor)"
+        >
+          <div class="doctor-info">
+            <div class="doctor-avatar">
+              {{ doctor.avatar ? doctor.avatar : "👨‍⚕️" }}
+            </div>
+            <div class="doctor-detail">
+              <h4 class="doctor-name">{{ doctor.name }}</h4>
+              <p class="doctor-title">{{ doctor.title }}</p>
+              <p class="doctor-specialty">
+                擅长: {{ doctor.specialty || "暂无" }}
+              </p>
+            </div>
+          </div>
+          <div class="doctor-actions">
+            <button class="btn btn-primary btn-sm">查看排班</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 排班信息 -->
+    <div
+      class="schedules-panel card"
+      *ngIf="selectedDoctor && doctorSchedules.length > 0"
+    >
+      <h3>{{ selectedDoctor.name }} - 近7天排班</h3>
+
+      <div *ngIf="doctorSchedules.length === 0" class="alert alert-info">
+        该医生近7天暂无排班
+      </div>
+
+      <div *ngIf="doctorSchedules.length > 0" class="schedule-grid">
+        <div
+          class="schedule-card"
+          *ngFor="let schedule of doctorSchedules"
+          [class.full]="schedule.remainingSlots === 0"
+        >
+          <div class="schedule-date">
+            {{ formatDateDisplay(schedule.scheduleDate) }}
+          </div>
+          <div class="schedule-slot">
+            {{ getTimeSlotDisplay(schedule.timeSlot) }}
+          </div>
+          <div class="slots-info">
+            <span
+              class="slots-remaining"
+              [class.warning]="schedule.remainingSlots <= 3"
+            >
+              剩余: {{ schedule.remainingSlots }}号
+            </span>
+            <span class="slots-total">/共{{ schedule.maxAppointments }}号</span>
+          </div>
+          <button
+            class="btn btn-primary w-100"
+            [disabled]="schedule.remainingSlots === 0"
+            (click)="openBookingModal(schedule)"
+          >
+            {{ schedule.remainingSlots === 0 ? "已约满" : "立即预约" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 预约弹窗 -->
+<div
+  class="modal-overlay"
+  *ngIf="showBookingModal"
+  (click)="closeBookingModal()"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>预约挂号</h3>
+      <button class="btn-close" (click)="closeBookingModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="selectedDoctor && selectedSchedule" class="appointment-info">
+        <div class="info-row">
+          <span class="label">医生:</span>
+          <span class="value"
+            >{{ selectedDoctor.name }} - {{ selectedDoctor.title }}</span
+          >
+        </div>
+        <div class="info-row">
+          <span class="label">日期:</span>
+          <span class="value">{{
+            formatDateDisplay(selectedSchedule.scheduleDate)
+          }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">时段:</span>
+          <span class="value">{{
+            getTimeSlotDisplay(selectedSchedule.timeSlot)
+          }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">剩余号源:</span>
+          <span class="value">{{ selectedSchedule.remainingSlots }}号</span>
+        </div>
+      </div>
+
+      <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+      <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+      <form [formGroup]="bookingForm" *ngIf="!success">
+        <div class="form-group">
+          <label>患者姓名 <span class="required">*</span></label>
+          <input
+            type="text"
+            formControlName="patientName"
+            class="form-control"
+            placeholder="请输入患者姓名"
+          />
+        </div>
+        <div class="form-group">
+          <label>身份证号</label>
+          <input
+            type="text"
+            formControlName="patientIdCard"
+            class="form-control"
+            placeholder="请输入身份证号（选填）"
+          />
+        </div>
+        <div class="form-group">
+          <label>手机号</label>
+          <input
+            type="text"
+            formControlName="patientPhone"
+            class="form-control"
+            placeholder="请输入手机号"
+          />
+        </div>
+        <div class="form-group">
+          <label>症状描述</label>
+          <textarea
+            formControlName="symptoms"
+            class="form-control"
+            rows="3"
+            placeholder="请描述症状（选填）"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" (click)="closeBookingModal()">
+        取消
+      </button>
+      <button
+        class="btn btn-primary"
+        [disabled]="bookingForm.invalid || submitting"
+        (click)="submitBooking()"
+        *ngIf="!success"
+      >
+        {{ submitting ? "预约中..." : "确认预约" }}
+      </button>
+    </div>
+  </div>
+</div>

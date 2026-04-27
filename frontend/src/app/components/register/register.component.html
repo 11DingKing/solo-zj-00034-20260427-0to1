@@ -1,0 +1,161 @@
+<div class="register-container">
+  <div class="register-card card">
+    <h2 class="text-center mb-20">用户注册</h2>
+
+    <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">用户名 <span class="required">*</span></label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-control"
+          placeholder="请输入用户名（3-50位）"
+        />
+        <div
+          *ngIf="
+            registerForm.get('username')?.invalid &&
+            registerForm.get('username')?.touched
+          "
+          class="error-text"
+        >
+          <span *ngIf="registerForm.get('username')?.errors?.['required']"
+            >请输入用户名</span
+          >
+          <span *ngIf="registerForm.get('username')?.errors?.['minlength']"
+            >用户名至少3位</span
+          >
+          <span *ngIf="registerForm.get('username')?.errors?.['maxlength']"
+            >用户名最多50位</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="realName">真实姓名 <span class="required">*</span></label>
+        <input
+          type="text"
+          id="realName"
+          formControlName="realName"
+          class="form-control"
+          placeholder="请输入真实姓名"
+        />
+        <div
+          *ngIf="
+            registerForm.get('realName')?.invalid &&
+            registerForm.get('realName')?.touched
+          "
+          class="error-text"
+        >
+          请输入真实姓名
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">密码 <span class="required">*</span></label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="请输入密码（6-50位）"
+        />
+        <div
+          *ngIf="
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
+          "
+          class="error-text"
+        >
+          <span *ngIf="registerForm.get('password')?.errors?.['required']"
+            >请输入密码</span
+          >
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
+            >密码至少6位</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword"
+          >确认密码 <span class="required">*</span></label
+        >
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          class="form-control"
+          placeholder="请再次输入密码"
+        />
+        <div
+          *ngIf="
+            registerForm.get('confirmPassword')?.invalid &&
+            registerForm.get('confirmPassword')?.touched
+          "
+          class="error-text"
+        >
+          <span
+            *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+            >请确认密码</span
+          >
+          <span
+            *ngIf="
+              registerForm.get('confirmPassword')?.errors?.['passwordMismatch']
+            "
+            >两次密码输入不一致</span
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="idCard">身份证号</label>
+        <input
+          type="text"
+          id="idCard"
+          formControlName="idCard"
+          class="form-control"
+          placeholder="请输入身份证号（选填）"
+        />
+        <div
+          *ngIf="
+            registerForm.get('idCard')?.invalid &&
+            registerForm.get('idCard')?.touched
+          "
+          class="error-text"
+        >
+          身份证号格式不正确
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">手机号</label>
+        <input
+          type="text"
+          id="phone"
+          formControlName="phone"
+          class="form-control"
+          placeholder="请输入手机号（选填）"
+        />
+        <div
+          *ngIf="
+            registerForm.get('phone')?.invalid &&
+            registerForm.get('phone')?.touched
+          "
+          class="error-text"
+        >
+          手机号格式不正确
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+        {{ loading ? "注册中..." : "注册" }}
+      </button>
+    </form>
+
+    <div class="text-center mt-20">
+      已有账号？<a routerLink="/login">立即登录</a>
+    </div>
+  </div>
+</div>

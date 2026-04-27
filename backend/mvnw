@@ -1,0 +1,47 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Wrapper shell script
+# ----------------------------------------------------------------------------
+
+set -e
+
+BASEDIR=$(dirname "$0")
+
+# Source directory
+if [ -z "$MAVEN_HOME" ]; then
+  MAVEN_HOME="$(cd "$BASEDIR" && pwd)"
+fi
+
+# Check for Maven wrapper jar
+MAVEN_WRAPPER_JAR="$BASEDIR/.mvn/wrapper/maven-wrapper.jar"
+
+if [ -r "$MAVEN_WRAPPER_JAR" ]; then
+  # Use Java from JAVA_HOME if set
+  if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+    JAVACMD="$JAVA_HOME/bin/java"
+  else
+    JAVACMD='java'
+  fi
+
+  # Downloading Apache Maven...
+  MAVEN_OPTS="$(echo "$MAVEN_OPTS" | sed 's/-Xmx[0-9]*[kmg]//g')"
+  MAVEN_DEBUG_OPTS="${MAVEN_DEBUG_OPTS:--Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000}"
+
+  if [ "$MVNW_VERBOSE" = "true" ]; then
+    echo "Apache Maven Wrapper"
+    echo "Java home: ${JAVA_HOME:-Not specified}"
+    echo "Java command: ${JAVACMD}"
+    echo "Maven home: ${MAVEN_HOME}"
+    echo "Maven wrapper jar: ${MAVEN_WRAPPER_JAR}"
+  fi
+
+  "$JAVACMD" \
+    $MAVEN_OPTS \
+    -classpath "$MAVEN_WRAPPER_JAR" \
+    org.apache.maven.wrapper.MavenWrapperMain \
+    "$@"
+else
+  echo "Cannot find Maven wrapper jar at $MAVEN_WRAPPER_JAR" >&2
+  echo "Please ensure the .mvn/wrapper/maven-wrapper.jar file exists." >&2
+  exit 1
+fi

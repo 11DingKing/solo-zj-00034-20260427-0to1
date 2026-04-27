@@ -1,0 +1,234 @@
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-header h2 {
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  color: var(--text-secondary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.loading-container {
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+/* 统计卡片 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.stat-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.stat-icon.today {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-icon.monthly {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-icon.noshow {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 日历视图 */
+.section {
+  padding: 24px;
+}
+
+.section-title {
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.calendar-table-container {
+  overflow-x: auto;
+}
+
+.calendar-table {
+  width: 100%;
+  min-width: 600px;
+}
+
+.calendar-table th,
+.calendar-table td {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid var(--border-color);
+  padding: 12px 8px;
+}
+
+.calendar-table thead th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.dept-header {
+  min-width: 120px;
+}
+
+.dept-cell {
+  text-align: left;
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.calendar-cell {
+  min-width: 80px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.calendar-cell:hover {
+  transform: scale(1.05);
+}
+
+.cell-booked {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cell-total {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* 强度颜色 */
+.intensity-high {
+  background: #ffccc7;
+}
+
+.intensity-medium {
+  background: #ffe58f;
+}
+
+.intensity-low {
+  background: #b7eb8f;
+}
+
+.intensity-none {
+  background: #f5f5f5;
+}
+
+/* 图例 */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+/* 快捷操作 */
+.quick-actions h3 {
+  margin-bottom: 16px;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.action-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.action-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
