@@ -13,6 +13,9 @@ import { SymptomGuideComponent } from "./components/patient/symptom/symptom-guid
 import { DoctorAppointmentsComponent } from "./components/doctor/appointments/doctor-appointments.component";
 
 import { AdminDashboardComponent } from "./components/admin/dashboard/admin-dashboard.component";
+import { AdminDepartmentsComponent } from "./components/admin/departments/admin-departments.component";
+import { AdminDoctorsComponent } from "./components/admin/doctors/admin-doctors.component";
+import { AdminSchedulesComponent } from "./components/admin/schedules/admin-schedules.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -62,19 +65,19 @@ const routes: Routes = [
   },
   {
     path: "admin/departments",
-    component: AdminDashboardComponent,
+    component: AdminDepartmentsComponent,
     canActivate: [AuthGuard],
     data: { roles: ["ADMIN"] },
   },
   {
     path: "admin/doctors",
-    component: AdminDashboardComponent,
+    component: AdminDoctorsComponent,
     canActivate: [AuthGuard],
     data: { roles: ["ADMIN"] },
   },
   {
     path: "admin/schedules",
-    component: AdminDashboardComponent,
+    component: AdminSchedulesComponent,
     canActivate: [AuthGuard],
     data: { roles: ["ADMIN"] },
   },

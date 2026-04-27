@@ -1,0 +1,151 @@
+<div class="container">
+  <div class="page-header flex-between">
+    <div>
+      <h2>🏥 科室管理</h2>
+      <p>管理医院科室信息</p>
+    </div>
+    <button class="btn btn-primary" (click)="openAddModal()">+ 新增科室</button>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+  <div
+    *ngIf="!loading && departments.length === 0"
+    class="card text-center empty-state"
+  >
+    <div class="empty-icon">🏥</div>
+    <h3>暂无科室数据</h3>
+    <p>点击上方按钮创建第一个科室</p>
+  </div>
+
+  <div *ngIf="!loading && departments.length > 0" class="card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>科室名称</th>
+            <th>描述</th>
+            <th>楼层位置</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dept of departments">
+            <td>{{ dept.id }}</td>
+            <td>
+              <strong>{{ dept.name }}</strong>
+            </td>
+            <td class="desc-cell">{{ dept.description || "-" }}</td>
+            <td>{{ dept.floorLocation }}</td>
+            <td>
+              <span class="badge {{ getStatusBadgeClass(dept.isActive) }}">
+                {{ getStatusText(dept.isActive) }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="openEditModal(dept)"
+                >
+                  编辑
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteDepartment(dept)"
+                >
+                  删除
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 新增/编辑弹窗 -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ editingDepartment ? "编辑科室" : "新增科室" }}</h3>
+      <button class="btn-close" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+      <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>科室名称 <span class="required">*</span></label>
+          <input
+            type="text"
+            formControlName="name"
+            class="form-control"
+            placeholder="请输入科室名称"
+          />
+          <div
+            *ngIf="
+              departmentForm.get('name')?.invalid &&
+              departmentForm.get('name')?.touched
+            "
+            class="error-text"
+          >
+            请输入科室名称
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>科室描述</label>
+          <textarea
+            formControlName="description"
+            class="form-control"
+            rows="3"
+            placeholder="请输入科室描述"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>楼层位置 <span class="required">*</span></label>
+          <input
+            type="text"
+            formControlName="floorLocation"
+            class="form-control"
+            placeholder="例如：门诊楼3层"
+          />
+          <div
+            *ngIf="
+              departmentForm.get('floorLocation')?.invalid &&
+              departmentForm.get('floorLocation')?.touched
+            "
+            class="error-text"
+          >
+            请输入楼层位置
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="isActive" />
+            <span>启用科室</span>
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" (click)="closeModal()">取消</button>
+      <button
+        class="btn btn-primary"
+        [disabled]="departmentForm.invalid || submitting"
+        (click)="onSubmit()"
+      >
+        {{ submitting ? "提交中..." : editingDepartment ? "保存" : "创建" }}
+      </button>
+    </div>
+  </div>
+</div>

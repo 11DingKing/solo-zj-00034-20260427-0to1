@@ -24,6 +24,9 @@ import { DoctorAppointmentsComponent } from "./components/doctor/appointments/do
 
 // Admin Components
 import { AdminDashboardComponent } from "./components/admin/dashboard/admin-dashboard.component";
+import { AdminDepartmentsComponent } from "./components/admin/departments/admin-departments.component";
+import { AdminDoctorsComponent } from "./components/admin/doctors/admin-doctors.component";
+import { AdminSchedulesComponent } from "./components/admin/schedules/admin-schedules.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +39,9 @@ import { AdminDashboardComponent } from "./components/admin/dashboard/admin-dash
     SymptomGuideComponent,
     DoctorAppointmentsComponent,
     AdminDashboardComponent,
+    AdminDepartmentsComponent,
+    AdminDoctorsComponent,
+    AdminSchedulesComponent,
   ],
   imports: [
     BrowserModule,

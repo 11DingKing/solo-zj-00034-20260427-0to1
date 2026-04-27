@@ -1,0 +1,189 @@
+<div class="container">
+  <div class="page-header">
+    <h2>📅 排班管理</h2>
+    <p>管理医生出诊排班信息</p>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div class="main-layout">
+    <!-- 医生列表 -->
+    <div class="doctor-panel card">
+      <h3>选择医生</h3>
+
+      <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+      <div
+        *ngIf="!loading && doctors.length === 0"
+        class="text-center empty-state"
+      >
+        <p>暂无医生数据</p>
+      </div>
+
+      <div *ngIf="!loading && doctors.length > 0" class="doctor-list">
+        <div
+          class="doctor-item"
+          *ngFor="let doctor of doctors"
+          [class.active]="selectedDoctor?.id === doctor.id"
+          (click)="selectDoctor(doctor)"
+        >
+          <div class="doctor-info">
+            <span class="doctor-name">{{ doctor.name }}</span>
+            <span class="doctor-dept">{{
+              getDepartmentName(doctor.departmentId)
+            }}</span>
+          </div>
+          <span class="doctor-title">{{ doctor.title }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 排班周视图 -->
+    <div class="schedule-panel card" *ngIf="selectedDoctor">
+      <div class="schedule-header flex-between">
+        <div>
+          <h3>{{ selectedDoctor.name }} - 本周排班</h3>
+          <p class="hint">点击格子切换出诊状态，可设置号源数量</p>
+        </div>
+        <div class="header-actions">
+          <button
+            class="btn btn-default"
+            (click)="copyWeekToNext()"
+            [disabled]="submitting"
+          >
+            复制到下周
+          </button>
+          <button
+            class="btn btn-primary"
+            (click)="saveSchedule()"
+            [disabled]="submitting"
+          >
+            {{ submitting ? "保存中..." : "保存排班" }}
+          </button>
+        </div>
+      </div>
+
+      <div class="schedule-table-container">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th class="time-header">时段</th>
+              <th *ngFor="let day of weekDays" class="day-header">
+                <div class="day-name">{{ day.name }}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 上午时段 -->
+            <tr>
+              <td class="time-cell">
+                <div class="time-label">上午</div>
+                <div class="time-range">8:00-12:00</div>
+              </td>
+              <td
+                *ngFor="let daySchedule of doctorSchedule"
+                class="schedule-cell {{ getSlotClass(daySchedule.morning) }}"
+                (click)="toggleSlot(daySchedule, 'morning')"
+              >
+                <ng-container *ngIf="daySchedule.morning.isActive">
+                  <div class="slot-status">出诊</div>
+                  <div class="slot-config">
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      [value]="daySchedule.morning.maxAppointments"
+                      (click)="$event.stopPropagation()"
+                      (change)="
+                        updateMaxAppointments(
+                          daySchedule,
+                          'morning',
+                          $any($event.target).value
+                        )
+                      "
+                      class="slot-input"
+                    />
+                    <span class="slot-unit">号</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!daySchedule.morning.isActive">
+                  <div class="slot-closed">
+                    休息
+                    <span class="click-hint">(点击开启)</span>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+
+            <!-- 下午时段 -->
+            <tr>
+              <td class="time-cell">
+                <div class="time-label">下午</div>
+                <div class="time-range">14:00-17:30</div>
+              </td>
+              <td
+                *ngFor="let daySchedule of doctorSchedule"
+                class="schedule-cell {{ getSlotClass(daySchedule.afternoon) }}"
+                (click)="toggleSlot(daySchedule, 'afternoon')"
+              >
+                <ng-container *ngIf="daySchedule.afternoon.isActive">
+                  <div class="slot-status">出诊</div>
+                  <div class="slot-config">
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      [value]="daySchedule.afternoon.maxAppointments"
+                      (click)="$event.stopPropagation()"
+                      (change)="
+                        updateMaxAppointments(
+                          daySchedule,
+                          'afternoon',
+                          $any($event.target).value
+                        )
+                      "
+                      class="slot-input"
+                    />
+                    <span class="slot-unit">号</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!daySchedule.afternoon.isActive">
+                  <div class="slot-closed">
+                    休息
+                    <span class="click-hint">(点击开启)</span>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 临时调整说明 -->
+      <div class="info-section">
+        <div class="alert alert-info">
+          <strong>说明：</strong>
+          <ul class="info-list">
+            <li>点击格子可以快速切换出诊/休息状态</li>
+            <li>点击数字可以修改该时段的最大号源数量</li>
+            <li>「复制到下周」功能会把本周排班复制到下周的实际排班表</li>
+            <li>修改后请点击「保存排班」按钮保存更改</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 未选择医生提示 -->
+    <div
+      class="schedule-panel card empty-panel"
+      *ngIf="!selectedDoctor && !loading"
+    >
+      <div class="empty-content text-center">
+        <div class="empty-icon">📋</div>
+        <h3>请选择医生</h3>
+        <p>从左侧医生列表选择一位医生来查看和编辑排班</p>
+      </div>
+    </div>
+  </div>
+</div>

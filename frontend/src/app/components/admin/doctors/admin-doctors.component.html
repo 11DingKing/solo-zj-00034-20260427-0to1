@@ -1,0 +1,268 @@
+<div class="container">
+  <div class="page-header flex-between">
+    <div>
+      <h2>👨‍⚕️ 医生管理</h2>
+      <p>管理医院医生信息</p>
+    </div>
+    <button class="btn btn-primary" (click)="openAddModal()">+ 新增医生</button>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading-container text-center">加载中...</div>
+
+  <div
+    *ngIf="!loading && doctors.length === 0"
+    class="card text-center empty-state"
+  >
+    <div class="empty-icon">👨‍⚕️</div>
+    <h3>暂无医生数据</h3>
+    <p>点击上方按钮创建第一个医生</p>
+  </div>
+
+  <div *ngIf="!loading && doctors.length > 0" class="doctors-grid">
+    <div class="doctor-card card" *ngFor="let doctor of doctors">
+      <div class="doctor-header">
+        <div class="doctor-avatar">
+          {{
+            doctor.avatar
+              ? doctor.avatar
+              : getDeptIcon(getDepartmentName(doctor.departmentId))
+          }}
+        </div>
+        <div class="doctor-info">
+          <h3 class="doctor-name">{{ doctor.name }}</h3>
+          <p class="doctor-title">{{ doctor.title }}</p>
+          <p class="doctor-dept">
+            {{ getDepartmentName(doctor.departmentId) }}
+          </p>
+        </div>
+        <span class="badge {{ getStatusBadgeClass(doctor.status) }}">
+          {{ getStatusText(doctor.status) }}
+        </span>
+      </div>
+
+      <div class="doctor-body">
+        <div class="info-row">
+          <span class="info-label">擅长:</span>
+          <span class="info-value">{{ doctor.specialty || "-" }}</span>
+        </div>
+        <div class="info-row" *ngIf="doctor.introduction">
+          <span class="info-label">简介:</span>
+          <span class="info-value">{{ doctor.introduction }}</span>
+        </div>
+      </div>
+
+      <div class="doctor-footer">
+        <button class="btn btn-primary btn-sm" (click)="openEditModal(doctor)">
+          编辑
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="deleteDoctor(doctor)">
+          删除
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 新增/编辑弹窗 -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ editingDoctor ? "编辑医生" : "新增医生" }}</h3>
+      <button class="btn-close" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+      <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>医生姓名 <span class="required">*</span></label>
+            <input
+              type="text"
+              formControlName="name"
+              class="form-control"
+              placeholder="请输入医生姓名"
+            />
+            <div
+              *ngIf="
+                doctorForm.get('name')?.invalid &&
+                doctorForm.get('name')?.touched
+              "
+              class="error-text"
+            >
+              请输入医生姓名
+            </div>
+          </div>
+          <div class="form-group">
+            <label>职称 <span class="required">*</span></label>
+            <input
+              type="text"
+              formControlName="title"
+              class="form-control"
+              placeholder="例如：主任医师"
+            />
+            <div
+              *ngIf="
+                doctorForm.get('title')?.invalid &&
+                doctorForm.get('title')?.touched
+              "
+              class="error-text"
+            >
+              请输入职称
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>所属科室 <span class="required">*</span></label>
+            <select formControlName="departmentId" class="form-control">
+              <option value="">请选择科室</option>
+              <option *ngFor="let dept of departments" [value]="dept.id">
+                {{ dept.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                doctorForm.get('departmentId')?.invalid &&
+                doctorForm.get('departmentId')?.touched
+              "
+              class="error-text"
+            >
+              请选择科室
+            </div>
+          </div>
+          <div class="form-group" *ngIf="!editingDoctor">
+            <label>出诊状态</label>
+            <select formControlName="status" class="form-control">
+              <option value="AVAILABLE">出诊中</option>
+              <option value="UNAVAILABLE">停诊</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>擅长领域 <span class="required">*</span></label>
+          <input
+            type="text"
+            formControlName="specialty"
+            class="form-control"
+            placeholder="例如：心血管疾病、高血压"
+          />
+          <div
+            *ngIf="
+              doctorForm.get('specialty')?.invalid &&
+              doctorForm.get('specialty')?.touched
+            "
+            class="error-text"
+          >
+            请输入擅长领域
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>医生简介</label>
+          <textarea
+            formControlName="introduction"
+            class="form-control"
+            rows="3"
+            placeholder="请输入医生简介"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>头像链接</label>
+          <input
+            type="text"
+            formControlName="avatar"
+            class="form-control"
+            placeholder="头像图片URL（可选）"
+          />
+        </div>
+
+        <ng-container *ngIf="!editingDoctor">
+          <hr
+            style="
+              margin: 20px 0;
+              border: none;
+              border-top: 1px solid var(--border-color);
+            "
+          />
+          <h4
+            style="
+              margin-bottom: 16px;
+              color: var(--text-secondary);
+              font-size: 14px;
+            "
+          >
+            登录账号（仅新增时设置）
+          </h4>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>登录用户名 <span class="required">*</span></label>
+              <input
+                type="text"
+                formControlName="username"
+                class="form-control"
+                placeholder="请输入用户名"
+              />
+              <div
+                *ngIf="
+                  doctorForm.get('username')?.invalid &&
+                  doctorForm.get('username')?.touched
+                "
+                class="error-text"
+              >
+                请输入用户名
+              </div>
+            </div>
+            <div class="form-group">
+              <label>登录密码 <span class="required">*</span></label>
+              <input
+                type="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="请输入密码（至少6位）"
+              />
+              <div
+                *ngIf="
+                  doctorForm.get('password')?.invalid &&
+                  doctorForm.get('password')?.touched
+                "
+                class="error-text"
+              >
+                请输入密码
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="editingDoctor">
+          <div class="form-row">
+            <div class="form-group">
+              <label>出诊状态</label>
+              <select formControlName="status" class="form-control">
+                <option value="AVAILABLE">出诊中</option>
+                <option value="UNAVAILABLE">停诊</option>
+              </select>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" (click)="closeModal()">取消</button>
+      <button
+        class="btn btn-primary"
+        [disabled]="submitting"
+        (click)="onSubmit()"
+      >
+        {{ submitting ? "提交中..." : editingDoctor ? "保存" : "创建" }}
+      </button>
+    </div>
+  </div>
+</div>
