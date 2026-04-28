@@ -16,24 +16,3 @@ public class DashboardStats {
     private List<DailyTrend> dailyTrends;
     private Map<String, Object> calendarView;
 }
-
-@Data
-class DepartmentAppointmentStats {
-    private Long departmentId;
-    private String departmentName;
-    private long count;
-}
-
-@Data
-class DoctorWorkloadStats {
-    private Long doctorId;
-    private String doctorName;
-    private String departmentName;
-    private long count;
-}
-
-@Data
-class DailyTrend {
-    private String date;
-    private long count;
-}
