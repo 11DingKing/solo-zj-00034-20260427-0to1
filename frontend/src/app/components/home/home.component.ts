@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
 
   loadDepartments(): void {
     this.departmentService.getPublicDepartments().subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.departments = data;
         this.loading = false;
       },

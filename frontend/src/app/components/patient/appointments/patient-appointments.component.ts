@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import {
   AppointmentService,
   Appointment,
-} from "../../services/appointment.service";
+} from "../../../services/appointment.service";
 
 @Component({
   selector: "app-patient-appointments",
@@ -25,9 +25,9 @@ export class PatientAppointmentsComponent implements OnInit {
   loadAppointments(): void {
     this.loading = true;
     this.appointmentService.getMyAppointments().subscribe({
-      next: (data) => {
+      next: (data: Appointment[]) => {
         this.appointments = data.sort(
-          (a, b) =>
+          (a: Appointment, b: Appointment) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
         this.loading = false;
@@ -101,7 +101,7 @@ export class PatientAppointmentsComponent implements OnInit {
         appointment.status = "CANCELLED";
         setTimeout(() => (this.success = ""), 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "取消失败，请稍后重试";
         this.cancellingId = null;
       },

@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import {
   DepartmentService,
   Department,
-} from "../../services/department.service";
-import { DoctorService, Doctor } from "../../services/doctor.service";
-import { ScheduleService, Schedule } from "../../services/schedule.service";
+} from "../../../services/department.service";
+import { DoctorService, Doctor } from "../../../services/doctor.service";
+import { ScheduleService, Schedule } from "../../../services/schedule.service";
 import {
   AppointmentService,
   AppointmentRequest,
-} from "../../services/appointment.service";
+} from "../../../services/appointment.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
@@ -60,7 +60,7 @@ export class PatientDepartmentsComponent implements OnInit {
 
   loadDepartments(): void {
     this.departmentService.getPublicDepartments().subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.departments = data;
       },
     });
@@ -69,7 +69,7 @@ export class PatientDepartmentsComponent implements OnInit {
   loadDoctors(deptId: number): void {
     this.loading = true;
     this.doctorService.getByDepartment(deptId).subscribe({
-      next: (data) => {
+      next: (data: Doctor[]) => {
         this.doctors = data;
         this.selectedDepartment =
           this.departments.find((d) => d.id === deptId) || null;
@@ -101,9 +101,9 @@ export class PatientDepartmentsComponent implements OnInit {
     this.scheduleService
       .getDoctorSchedules(doctorId, startDate, endDate)
       .subscribe({
-        next: (data) => {
+        next: (data: Schedule[]) => {
           this.doctorSchedules = data.filter(
-            (s) => s.isActive && s.remainingSlots > 0,
+            (s: Schedule) => s.isActive && s.remainingSlots > 0,
           );
         },
       });
@@ -155,7 +155,7 @@ export class PatientDepartmentsComponent implements OnInit {
           }
         }, 2000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "预约失败，请稍后重试";
         this.submitting = false;
       },

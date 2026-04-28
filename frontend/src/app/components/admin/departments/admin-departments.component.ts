@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DepartmentService, Department } from '../../services/department.service';
+import { DepartmentService, Department } from '../../../services/department.service';
 
 @Component({
   selector: 'app-admin-departments',
@@ -37,7 +37,7 @@ export class AdminDepartmentsComponent implements OnInit {
   loadDepartments(): void {
     this.loading = true;
     this.departmentService.getAllDepartments().subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.departments = data;
         this.loading = false;
       },
@@ -104,7 +104,7 @@ export class AdminDepartmentsComponent implements OnInit {
           this.loadDepartments();
           setTimeout(() => this.success = '', 3000);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = err.error || '更新失败';
           this.submitting = false;
         }
@@ -118,7 +118,7 @@ export class AdminDepartmentsComponent implements OnInit {
           this.loadDepartments();
           setTimeout(() => this.success = '', 3000);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = err.error || '创建失败';
           this.submitting = false;
         }
@@ -137,7 +137,7 @@ export class AdminDepartmentsComponent implements OnInit {
         this.loadDepartments();
         setTimeout(() => this.success = '', 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || '删除失败，该科室可能有关联数据';
       }
     });

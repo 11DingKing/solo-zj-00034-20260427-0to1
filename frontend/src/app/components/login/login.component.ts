@@ -43,7 +43,7 @@ export class LoginComponent {
         const returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
         this.router.navigate([returnUrl]);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "登录失败，请检查用户名和密码";
         this.loading = false;
       },

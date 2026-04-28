@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { DoctorService, Doctor } from "../../services/doctor.service";
+import { DoctorService, Doctor } from "../../../services/doctor.service";
 import {
   DepartmentService,
   Department,
-} from "../../services/department.service";
+} from "../../../services/department.service";
 
 @Component({
   selector: "app-admin-doctors",
@@ -49,7 +49,7 @@ export class AdminDoctorsComponent implements OnInit {
     this.loading = true;
 
     this.departmentService.getAllDepartments().subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.departments = data;
       },
       error: () => {
@@ -58,7 +58,7 @@ export class AdminDoctorsComponent implements OnInit {
     });
 
     this.doctorService.getAllDoctors().subscribe({
-      next: (data) => {
+      next: (data: Doctor[]) => {
         this.doctors = data;
         this.loading = false;
       },
@@ -152,7 +152,7 @@ export class AdminDoctorsComponent implements OnInit {
           this.loadData();
           setTimeout(() => (this.success = ""), 3000);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = err.error || "更新失败";
           this.submitting = false;
         },
@@ -177,7 +177,7 @@ export class AdminDoctorsComponent implements OnInit {
           this.loadData();
           setTimeout(() => (this.success = ""), 3000);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error = err.error || "创建失败";
           this.submitting = false;
         },
@@ -196,7 +196,7 @@ export class AdminDoctorsComponent implements OnInit {
         this.loadData();
         setTimeout(() => (this.success = ""), 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "删除失败";
       },
     });

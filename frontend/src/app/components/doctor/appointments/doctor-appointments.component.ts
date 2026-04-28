@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import {
   AppointmentService,
   Appointment,
-} from "../../services/appointment.service";
+} from "../../../services/appointment.service";
 
 @Component({
   selector: "app-doctor-appointments",
@@ -26,7 +26,7 @@ export class DoctorAppointmentsComponent implements OnInit {
     this.loading = true;
 
     this.appointmentService.getDoctorTodayAppointments().subscribe({
-      next: (data) => {
+      next: (data: Appointment[]) => {
         this.todayAppointments = data;
       },
       error: () => {
@@ -35,7 +35,7 @@ export class DoctorAppointmentsComponent implements OnInit {
     });
 
     this.appointmentService.getDoctorUpcomingAppointments().subscribe({
-      next: (data) => {
+      next: (data: Appointment[]) => {
         this.upcomingAppointments = data;
         this.loading = false;
       },
@@ -81,7 +81,7 @@ export class DoctorAppointmentsComponent implements OnInit {
         appointment.status = "VISITED";
         setTimeout(() => (this.success = ""), 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "操作失败";
       },
     });
@@ -98,7 +98,7 @@ export class DoctorAppointmentsComponent implements OnInit {
         appointment.status = "NO_SHOW";
         setTimeout(() => (this.success = ""), 3000);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "操作失败";
       },
     });

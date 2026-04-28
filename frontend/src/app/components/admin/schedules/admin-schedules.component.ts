@@ -1,13 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { DoctorService, Doctor } from "../../services/doctor.service";
+import { DoctorService, Doctor } from "../../../services/doctor.service";
 import {
   ScheduleService,
   ScheduleTemplate,
-} from "../../services/schedule.service";
+} from "../../../services/schedule.service";
 import {
   DepartmentService,
   Department,
-} from "../../services/department.service";
+} from "../../../services/department.service";
 
 interface DaySchedule {
   dayOfWeek: number;
@@ -62,7 +62,7 @@ export class AdminSchedulesComponent implements OnInit {
     this.loading = true;
 
     this.departmentService.getAllDepartments().subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.departments = data;
       },
       error: () => {
@@ -71,7 +71,7 @@ export class AdminSchedulesComponent implements OnInit {
     });
 
     this.doctorService.getAllDoctors().subscribe({
-      next: (data) => {
+      next: (data: Doctor[]) => {
         this.doctors = data;
         this.loading = false;
       },
@@ -91,7 +91,7 @@ export class AdminSchedulesComponent implements OnInit {
 
   loadDoctorSchedule(doctorId: number): void {
     this.scheduleService.getTemplates(doctorId).subscribe({
-      next: (templates) => {
+      next: (templates: ScheduleTemplate[]) => {
         this.buildScheduleFromTemplates(templates);
       },
       error: () => {

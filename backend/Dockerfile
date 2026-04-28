@@ -1,8 +1,11 @@
 FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B || mvn dependency:go-offline -B || mvn dependency:go-offline -B
 
+# 配置阿里云 Maven 镜像源
+RUN mkdir -p /root/.m2 && \
+    echo '<settings><mirrors><mirror><id>aliyun</id><mirrorOf>central</mirrorOf><url>https://maven.aliyun.com/repository/central</url></mirror></mirrors></settings>' > /root/.m2/settings.xml
+
+COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 

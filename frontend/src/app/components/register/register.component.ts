@@ -86,7 +86,7 @@ export class RegisterComponent {
       next: () => {
         this.router.navigate(["/"]);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = err.error || "注册失败，请稍后重试";
         this.loading = false;
       },

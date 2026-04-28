@@ -9,7 +9,7 @@ import { Chart, registerables } from "chart.js";
 import {
   DashboardService,
   DashboardStats,
-} from "../../services/dashboard.service";
+} from "../../../services/dashboard.service";
 
 Chart.register(...registerables);
 
@@ -45,7 +45,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
   loadStats(): void {
     this.dashboardService.getStats().subscribe({
-      next: (data) => {
+      next: (data: DashboardStats) => {
         this.stats = data;
         this.loading = false;
       },
@@ -57,7 +57,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
   loadCalendarView(): void {
     this.dashboardService.getCalendarView().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.calendarView = data;
       },
     });

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { SymptomService } from "../../services/dashboard.service";
-import { Department } from "../../services/department.service";
+import { SymptomService } from "../../../services/dashboard.service";
+import { Department } from "../../../services/department.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -46,7 +46,7 @@ export class SymptomGuideComponent {
     const symptoms = this.symptomForm.value.symptoms;
 
     this.symptomService.recommendDepartments(symptoms).subscribe({
-      next: (data) => {
+      next: (data: Department[]) => {
         this.recommendedDepartments = data;
         this.loading = false;
       },
