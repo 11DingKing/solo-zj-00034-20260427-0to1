@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS symptom_department (
 
 -- 初始化管理员账号 (password: admin123)
 INSERT INTO users (username, password, role, real_name, is_active) VALUES 
-('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5E', 'ADMIN', '系统管理员', TRUE);
+('admin', '$2a$10$vI8aWBnW3fID.ZQ38G1v2eW5hH7kK9lL0mN2pQ4rS6tU8vW0xY2z', 'ADMIN', '系统管理员', TRUE);
 
 -- 初始化示例科室
 INSERT INTO departments (name, description, floor_location) VALUES 

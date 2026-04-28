@@ -7,7 +7,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from "@angular/forms";
-import { AuthService, RegisterRequest } from "../services/auth.service";
+import { AuthService, RegisterRequest } from "../../services/auth.service";
 
 @Component({
   selector: "app-register",

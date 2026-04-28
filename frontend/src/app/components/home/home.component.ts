@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { DepartmentService, Department } from "../services/department.service";
-import { AuthService } from "../services/auth.service";
+import { DepartmentService, Department } from "../../services/department.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-home",
