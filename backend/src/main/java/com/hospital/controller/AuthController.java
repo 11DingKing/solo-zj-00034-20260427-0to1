@@ -49,7 +49,7 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             
-            User user = authService.getCurrentUser();
+            User user = authService.findByUsername(request.getUsername());
             if (user == null) {
                 return ResponseEntity.badRequest().body("用户不存在");
             }
